@@ -1,11 +1,32 @@
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
+
+export function getApiBaseUrl() {
+  if (configuredApiBaseUrl) {
+    return configuredApiBaseUrl.replace(/\/$/, '');
+  }
+
+  if (codespaceName) {
+    return `https://${codespaceName}-8000.app.github.dev`;
+  }
+
+  return 'http://127.0.0.1:8000';
+}
 
 function getCollectionUrl(endpoint) {
   const normalizedEndpoint = endpoint?.replace(/^\/+/, '').replace(/\/+$/, '') || '';
   const endpointKey = normalizedEndpoint.replace(/^api\//, '');
 
+  if (/^https?:\/\//i.test(endpoint || '')) {
+    return endpoint.replace(/\/$/, '') + '/';
+  }
+
   if (configuredApiBaseUrl) {
     return `${configuredApiBaseUrl.replace(/\/$/, '')}/api/${endpointKey}/`;
+  }
+
+  if (codespaceName) {
+    return `${getApiBaseUrl()}/api/${endpointKey}/`;
   }
 
   return `/api/${endpointKey}/`;
@@ -14,7 +35,6 @@ function getCollectionUrl(endpoint) {
 export function getApiUrl(path) {
   return getCollectionUrl(path);
 }
-
 
 export async function fetchCollection(endpoint) {
   const url = getCollectionUrl(endpoint);

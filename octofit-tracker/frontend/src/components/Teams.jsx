@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { fetchCollection } from '../api';
 
 function Teams() {
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
+  const apiEndpoint = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev/api/teams/`
+    : 'http://127.0.0.1:8000/api/teams/';
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -11,7 +15,7 @@ function Teams() {
 
     async function loadTeams() {
       try {
-        const data = await fetchCollection('/api/teams/');
+        const data = await fetchCollection(apiEndpoint);
         if (isMounted) {
           setTeams(data);
         }

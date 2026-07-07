@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { fetchCollection } from '../api';
 
 function Workouts() {
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
+  const apiEndpoint = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev/api/workouts/`
+    : 'http://127.0.0.1:8000/api/workouts/';
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -11,7 +15,7 @@ function Workouts() {
 
     async function loadWorkouts() {
       try {
-        const data = await fetchCollection('/api/workouts/');
+        const data = await fetchCollection(apiEndpoint);
         if (isMounted) {
           setWorkouts(data);
         }

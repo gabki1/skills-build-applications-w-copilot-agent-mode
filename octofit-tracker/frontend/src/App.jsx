@@ -4,6 +4,7 @@ import Leaderboard from './components/Leaderboard';
 import Teams from './components/Teams';
 import Users from './components/Users';
 import Workouts from './components/Workouts';
+import { getApiBaseUrl } from './api';
 import './App.css';
 
 const navItems = [
@@ -16,6 +17,8 @@ const navItems = [
 ];
 
 function App() {
+  const apiBaseUrl = getApiBaseUrl();
+
   return (
     <div className="container py-4">
       <header className="mb-4">
@@ -27,7 +30,7 @@ function App() {
             </p>
           </div>
           <div className="text-muted small">
-            API base: {import.meta.env.VITE_CODESPACE_NAME ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev` : 'http://127.0.0.1:8000'}
+            API base: {apiBaseUrl}
           </div>
         </div>
       </header>
