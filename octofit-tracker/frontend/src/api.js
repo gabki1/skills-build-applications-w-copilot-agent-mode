@@ -10,40 +10,51 @@ function getApiBaseUrl() {
   return DEFAULT_API_BASE_URL;
 }
 
+function getLocalApiBaseUrl() {
+  const isDev = import.meta.env.DEV;
+
+  if (!isDev) {
+    return null;
+  }
+
+  return DEFAULT_API_BASE_URL;
+}
+
 function getCollectionUrl(endpoint) {
   const normalizedEndpoint = endpoint?.replace(/^\/+/, '').replace(/\/+$/, '') || '';
-  const apiBaseUrl = getApiBaseUrl();
+  const localApiBaseUrl = getLocalApiBaseUrl();
+  const apiBaseUrl = localApiBaseUrl || getApiBaseUrl();
   const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
   const endpointKey = normalizedEndpoint.replace(/^api\//, '');
 
   if (endpointKey === 'users') {
-    return codespaceName
+    return codespaceName && !localApiBaseUrl
       ? `https://${codespaceName}-8000.app.github.dev/api/users/`
-      : `${DEFAULT_API_BASE_URL}/api/users/`;
+      : `${apiBaseUrl}/api/users/`;
   }
 
   if (endpointKey === 'teams') {
-    return codespaceName
+    return codespaceName && !localApiBaseUrl
       ? `https://${codespaceName}-8000.app.github.dev/api/teams/`
-      : `${DEFAULT_API_BASE_URL}/api/teams/`;
+      : `${apiBaseUrl}/api/teams/`;
   }
 
   if (endpointKey === 'activities') {
-    return codespaceName
+    return codespaceName && !localApiBaseUrl
       ? `https://${codespaceName}-8000.app.github.dev/api/activities/`
-      : `${DEFAULT_API_BASE_URL}/api/activities/`;
+      : `${apiBaseUrl}/api/activities/`;
   }
 
   if (endpointKey === 'leaderboard') {
-    return codespaceName
+    return codespaceName && !localApiBaseUrl
       ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
-      : `${DEFAULT_API_BASE_URL}/api/leaderboard/`;
+      : `${apiBaseUrl}/api/leaderboard/`;
   }
 
   if (endpointKey === 'workouts') {
-    return codespaceName
+    return codespaceName && !localApiBaseUrl
       ? `https://${codespaceName}-8000.app.github.dev/api/workouts/`
-      : `${DEFAULT_API_BASE_URL}/api/workouts/`;
+      : `${apiBaseUrl}/api/workouts/`;
   }
 
   return `${apiBaseUrl}/api/${endpointKey}/`;
@@ -54,14 +65,16 @@ export function getApiUrl(path) {
 }
 
 export async function fetchCollection(endpoint) {
-  const response = await fetch(getCollectionUrl(endpoint), {
+  const url = getCollectionUrl(endpoint);
+  const response = await fetch(url, {
     headers: {
       Accept: 'application/json',
     },
   });
 
   if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
+    const text = await response.text();
+    throw new Error(`Request failed with status ${response.status} for ${url}: ${text}`);
   }
 
   const payload = await response.json();
