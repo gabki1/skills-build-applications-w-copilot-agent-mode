@@ -10,15 +10,50 @@ function getApiBaseUrl() {
   return DEFAULT_API_BASE_URL;
 }
 
-export function getApiUrl(path) {
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  const withoutTrailingSlash = normalizedPath.replace(/\/+$/, '');
+function getCollectionUrl(endpoint) {
+  const normalizedEndpoint = endpoint?.replace(/^\/+/, '').replace(/\/+$/, '') || '';
+  const apiBaseUrl = getApiBaseUrl();
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
 
-  return `${getApiBaseUrl()}/api${withoutTrailingSlash}/`;
+  if (normalizedEndpoint === 'users') {
+    return codespaceName
+      ? `https://${codespaceName}-8000.app.github.dev/api/users/`
+      : `${DEFAULT_API_BASE_URL}/api/users/`;
+  }
+
+  if (normalizedEndpoint === 'teams') {
+    return codespaceName
+      ? `https://${codespaceName}-8000.app.github.dev/api/teams/`
+      : `${DEFAULT_API_BASE_URL}/api/teams/`;
+  }
+
+  if (normalizedEndpoint === 'activities') {
+    return codespaceName
+      ? `https://${codespaceName}-8000.app.github.dev/api/activities/`
+      : `${DEFAULT_API_BASE_URL}/api/activities/`;
+  }
+
+  if (normalizedEndpoint === 'leaderboard') {
+    return codespaceName
+      ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
+      : `${DEFAULT_API_BASE_URL}/api/leaderboard/`;
+  }
+
+  if (normalizedEndpoint === 'workouts') {
+    return codespaceName
+      ? `https://${codespaceName}-8000.app.github.dev/api/workouts/`
+      : `${DEFAULT_API_BASE_URL}/api/workouts/`;
+  }
+
+  return `${apiBaseUrl}/api/${normalizedEndpoint}/`;
+}
+
+export function getApiUrl(path) {
+  return getCollectionUrl(path);
 }
 
 export async function fetchCollection(endpoint) {
-  const response = await fetch(getApiUrl(endpoint), {
+  const response = await fetch(getCollectionUrl(endpoint), {
     headers: {
       Accept: 'application/json',
     },
