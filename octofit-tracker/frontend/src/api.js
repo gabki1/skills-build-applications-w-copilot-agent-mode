@@ -23,41 +23,43 @@ function getLocalApiBaseUrl() {
 function getCollectionUrl(endpoint) {
   const normalizedEndpoint = endpoint?.replace(/^\/+/, '').replace(/\/+$/, '') || '';
   const localApiBaseUrl = getLocalApiBaseUrl();
-  const apiBaseUrl = localApiBaseUrl || getApiBaseUrl();
-  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
   const endpointKey = normalizedEndpoint.replace(/^api\//, '');
 
+  if (localApiBaseUrl) {
+    return `${localApiBaseUrl}/api/${endpointKey}/`;
+  }
+
   if (endpointKey === 'users') {
-    return codespaceName && !localApiBaseUrl
-      ? `https://${codespaceName}-8000.app.github.dev/api/users/`
-      : `${apiBaseUrl}/api/users/`;
+    return import.meta.env.VITE_CODESPACE_NAME?.trim()
+      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/users/`
+      : `${DEFAULT_API_BASE_URL}/api/users/`;
   }
 
   if (endpointKey === 'teams') {
-    return codespaceName && !localApiBaseUrl
-      ? `https://${codespaceName}-8000.app.github.dev/api/teams/`
-      : `${apiBaseUrl}/api/teams/`;
+    return import.meta.env.VITE_CODESPACE_NAME?.trim()
+      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/teams/`
+      : `${DEFAULT_API_BASE_URL}/api/teams/`;
   }
 
   if (endpointKey === 'activities') {
-    return codespaceName && !localApiBaseUrl
-      ? `https://${codespaceName}-8000.app.github.dev/api/activities/`
-      : `${apiBaseUrl}/api/activities/`;
+    return import.meta.env.VITE_CODESPACE_NAME?.trim()
+      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/activities/`
+      : `${DEFAULT_API_BASE_URL}/api/activities/`;
   }
 
   if (endpointKey === 'leaderboard') {
-    return codespaceName && !localApiBaseUrl
-      ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
-      : `${apiBaseUrl}/api/leaderboard/`;
+    return import.meta.env.VITE_CODESPACE_NAME?.trim()
+      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/leaderboard/`
+      : `${DEFAULT_API_BASE_URL}/api/leaderboard/`;
   }
 
   if (endpointKey === 'workouts') {
-    return codespaceName && !localApiBaseUrl
-      ? `https://${codespaceName}-8000.app.github.dev/api/workouts/`
-      : `${apiBaseUrl}/api/workouts/`;
+    return import.meta.env.VITE_CODESPACE_NAME?.trim()
+      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/workouts/`
+      : `${DEFAULT_API_BASE_URL}/api/workouts/`;
   }
 
-  return `${apiBaseUrl}/api/${endpointKey}/`;
+  return `${DEFAULT_API_BASE_URL}/api/${endpointKey}/`;
 }
 
 export function getApiUrl(path) {
