@@ -15,6 +15,7 @@ export function getApiUrl(path) {
   return getCollectionUrl(path);
 }
 
+
 export async function fetchCollection(endpoint) {
   const url = getCollectionUrl(endpoint);
   const response = await fetch(url, {
