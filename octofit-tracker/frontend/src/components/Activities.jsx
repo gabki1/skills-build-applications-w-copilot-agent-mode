@@ -11,7 +11,7 @@ function Activities() {
 
     async function loadActivities() {
       try {
-        const data = await fetchCollection('/activities');
+        const data = await fetchCollection('/api/activities/');
         if (isMounted) {
           setActivities(data);
         }

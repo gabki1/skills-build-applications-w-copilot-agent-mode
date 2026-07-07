@@ -11,7 +11,7 @@ function Workouts() {
 
     async function loadWorkouts() {
       try {
-        const data = await fetchCollection('/workouts');
+        const data = await fetchCollection('/api/workouts/');
         if (isMounted) {
           setWorkouts(data);
         }

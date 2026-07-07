@@ -11,7 +11,7 @@ function Users() {
 
     async function loadUsers() {
       try {
-        const data = await fetchCollection('/users');
+        const data = await fetchCollection('/api/users/');
         if (isMounted) {
           setUsers(data);
         }

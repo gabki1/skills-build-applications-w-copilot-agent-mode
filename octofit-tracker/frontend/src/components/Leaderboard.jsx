@@ -11,7 +11,7 @@ function Leaderboard() {
 
     async function loadLeaderboard() {
       try {
-        const data = await fetchCollection('/leaderboard');
+        const data = await fetchCollection('/api/leaderboard/');
         if (isMounted) {
           setEntries(data);
         }

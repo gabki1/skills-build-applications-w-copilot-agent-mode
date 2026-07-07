@@ -11,7 +11,7 @@ function Teams() {
 
     async function loadTeams() {
       try {
-        const data = await fetchCollection('/teams');
+        const data = await fetchCollection('/api/teams/');
         if (isMounted) {
           setTeams(data);
         }

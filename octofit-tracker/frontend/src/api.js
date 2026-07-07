@@ -14,38 +14,39 @@ function getCollectionUrl(endpoint) {
   const normalizedEndpoint = endpoint?.replace(/^\/+/, '').replace(/\/+$/, '') || '';
   const apiBaseUrl = getApiBaseUrl();
   const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
+  const endpointKey = normalizedEndpoint.replace(/^api\//, '');
 
-  if (normalizedEndpoint === 'users') {
+  if (endpointKey === 'users') {
     return codespaceName
       ? `https://${codespaceName}-8000.app.github.dev/api/users/`
       : `${DEFAULT_API_BASE_URL}/api/users/`;
   }
 
-  if (normalizedEndpoint === 'teams') {
+  if (endpointKey === 'teams') {
     return codespaceName
       ? `https://${codespaceName}-8000.app.github.dev/api/teams/`
       : `${DEFAULT_API_BASE_URL}/api/teams/`;
   }
 
-  if (normalizedEndpoint === 'activities') {
+  if (endpointKey === 'activities') {
     return codespaceName
       ? `https://${codespaceName}-8000.app.github.dev/api/activities/`
       : `${DEFAULT_API_BASE_URL}/api/activities/`;
   }
 
-  if (normalizedEndpoint === 'leaderboard') {
+  if (endpointKey === 'leaderboard') {
     return codespaceName
       ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
       : `${DEFAULT_API_BASE_URL}/api/leaderboard/`;
   }
 
-  if (normalizedEndpoint === 'workouts') {
+  if (endpointKey === 'workouts') {
     return codespaceName
       ? `https://${codespaceName}-8000.app.github.dev/api/workouts/`
       : `${DEFAULT_API_BASE_URL}/api/workouts/`;
   }
 
-  return `${apiBaseUrl}/api/${normalizedEndpoint}/`;
+  return `${apiBaseUrl}/api/${endpointKey}/`;
 }
 
 export function getApiUrl(path) {

@@ -14,6 +14,15 @@ const apiBaseUrl = codespaceName
     ? `https://${codespaceName}-8000.app.github.dev`
     : `http://localhost:${port}`;
 app.use(express_1.default.json());
+app.use((_req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    if (_req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+    }
+    next();
+});
 app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', apiBaseUrl });
 });
