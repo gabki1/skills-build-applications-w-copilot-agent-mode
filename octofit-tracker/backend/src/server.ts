@@ -12,6 +12,7 @@ const apiBaseUrl = codespaceName
 
 app.use(express.json());
 
+
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', apiBaseUrl });
 });
