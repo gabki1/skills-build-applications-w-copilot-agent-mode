@@ -1,65 +1,14 @@
-const DEFAULT_API_BASE_URL = 'http://127.0.0.1:8000';
-
-function getApiBaseUrl() {
-  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
-
-  if (codespaceName) {
-    return `https://${codespaceName}-8000.app.github.dev`;
-  }
-
-  return DEFAULT_API_BASE_URL;
-}
-
-function getLocalApiBaseUrl() {
-  const isDev = import.meta.env.DEV;
-
-  if (!isDev) {
-    return null;
-  }
-
-  return DEFAULT_API_BASE_URL;
-}
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 
 function getCollectionUrl(endpoint) {
   const normalizedEndpoint = endpoint?.replace(/^\/+/, '').replace(/\/+$/, '') || '';
-  const localApiBaseUrl = getLocalApiBaseUrl();
   const endpointKey = normalizedEndpoint.replace(/^api\//, '');
 
-  if (localApiBaseUrl) {
-    return `${localApiBaseUrl}/api/${endpointKey}/`;
+  if (configuredApiBaseUrl) {
+    return `${configuredApiBaseUrl.replace(/\/$/, '')}/api/${endpointKey}/`;
   }
 
-  if (endpointKey === 'users') {
-    return import.meta.env.VITE_CODESPACE_NAME?.trim()
-      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/users/`
-      : `${DEFAULT_API_BASE_URL}/api/users/`;
-  }
-
-  if (endpointKey === 'teams') {
-    return import.meta.env.VITE_CODESPACE_NAME?.trim()
-      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/teams/`
-      : `${DEFAULT_API_BASE_URL}/api/teams/`;
-  }
-
-  if (endpointKey === 'activities') {
-    return import.meta.env.VITE_CODESPACE_NAME?.trim()
-      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/activities/`
-      : `${DEFAULT_API_BASE_URL}/api/activities/`;
-  }
-
-  if (endpointKey === 'leaderboard') {
-    return import.meta.env.VITE_CODESPACE_NAME?.trim()
-      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/leaderboard/`
-      : `${DEFAULT_API_BASE_URL}/api/leaderboard/`;
-  }
-
-  if (endpointKey === 'workouts') {
-    return import.meta.env.VITE_CODESPACE_NAME?.trim()
-      ? `https://${import.meta.env.VITE_CODESPACE_NAME.trim()}-8000.app.github.dev/api/workouts/`
-      : `${DEFAULT_API_BASE_URL}/api/workouts/`;
-  }
-
-  return `${DEFAULT_API_BASE_URL}/api/${endpointKey}/`;
+  return `/api/${endpointKey}/`;
 }
 
 export function getApiUrl(path) {
